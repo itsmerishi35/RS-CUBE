@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flood Prediction</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        /* Reset default margin/padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body styles */
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://img.freepik.com/premium-photo/abstract-gray-background-with-white-lines-dots_1174990-197521.jpg');
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+            background-color: #897c7c;
+            flex-direction: column;
+        }
+
+        /* Navigation Bar Styles */
+        nav {
+            width: 100%;
+            background-color: #8f7d8c; /* Added background color */
+            align-content: center;
+            color: white;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(1, 1, 1, 0.1);
+            position: fixed;  /* Fix the navbar to the top */
+            top: 0;  /* Ensure it's at the top */
+            left: 0;
+            z-index: 1000; /* Ensures it's on top of other content */
+        }
+
+        nav .navbar-container {
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            padding: 10px;
+        }
+
+        nav .navbar-container h1 {
+            margin-right: 750px;
+        }
+
+        nav .navbar-container button {
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-right: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        nav .navbar-container button:hover {
+            background-color: #007bff;
+        }
+
+        /* About Us section */
+       /* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    background: url('https://img.freepik.com/premium-photo/abstract-gray-background-with-white-lines-dots_1174990-197521.jpg');
+    background-size: cover;  /* Ensure the image covers the full screen */
+    background-position: center;  /* Position the image in the center */
+    background-repeat: no-repeat;  /* Prevent tiling of the image */
+    display: flex;
+    justify-content: center;
+    align-items: center;  /* Center content vertically */
+    min-height: 100vh;
+    padding: 20px;
+    background-color: #897c7c;
+    flex-direction: column;
+}
+
+/* About Us section */
+.about-us {
+    width: 80%;
+    max-width: 900px;
+    background-color: rgba(255, 255, 255, 0.8); /* Slight transparent white background */
+    padding: 30px;
+    border-radius: 999px;
+    box-shadow: 0 4px 8px rgba(38, 38, 38, 0.1);
+    text-align: center;
+}
+
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="navbar-container">
+            <h1>Flood Prediction</h1>
+            <a href="/"> <button>Home</button></a>
+            <a href="/about"> <button>About us</button></a>
+            <a href="/call"> <button>Call for us</button></a>
+            <a href="logout"> <button>logout</button></a>
+        </div>
+    </nav>
+
+    <!-- About Us Section -->
+    <div class="about-us">
+        <h2>About Us</h2>
+        <p>We are a dedicated team focused on providing reliable and timely flood prediction solutions to help communities stay safe. Our goal is to leverage advanced technology and real-time data to predict flood risks, offering early warnings that allow individuals and authorities to take proactive measures. Through our platform, we aim to enhance public awareness, improve disaster preparedness, and support effective response efforts in flood-prone areas. We are committed to making communities more resilient and reducing the devastating impact of floods.</p>
+    </div>
+
+</body>
+</html>

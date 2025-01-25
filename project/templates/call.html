@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flood Prediction</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        /* Reset default margin/padding */
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Body styles */
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://img.freepik.com/premium-photo/abstract-gray-background-with-white-lines-dots_1174990-197521.jpg');
+            background-size: cover;  /* Ensure the image covers the full screen */
+    background-position: center;  /* Position the image in the center */
+    background-repeat: no-repeat;  /* Prevent tiling of the image */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-color: #897c7c;
+            flex-direction: column;
+        }
+
+        /* Navigation Bar Styles */
+        nav {
+            width: 100%;
+            background-color: #8f7d8c; /* Added background color */
+            align-content: center;
+            color: white;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(1, 1, 1, 0.1);
+            position: fixed;  /* Fix the navbar to the top */
+            top: 0;  /* Ensure it's at the top */
+            left: 0;
+            z-index: 1000; /* Ensures it's on top of other content */
+        }
+
+        nav .navbar-container {
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            padding: 10px;
+        }
+
+        nav .navbar-container h1 {
+            margin-right: 750px;
+        }
+
+        nav .navbar-container button {
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-right: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        nav .navbar-container button:hover {
+            background-color: #007bff;
+        }
+
+        /* Center-aligned table container */
+        .table-container {
+            width: 50%; /* Set the width to 50% of the screen */
+            background-color: rgba(255, 255, 255, 0.3); /* White background with opacity for transparency */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(38, 38, 38, 0.3);
+            margin-top: 20px;
+            text-align: center;
+            /* Centering the table container */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: rgba(255, 255, 255, 0.5); /* Transparent background for the table */
+            border-radius: 8px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Styling the clickable phone numbers */
+        a.phone-number {
+            text-decoration: underline;
+            color: #007bff;
+        }
+
+        a.phone-number:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="navbar-container">
+            <h1>Flood Prediction</h1>
+            <a href="/"> <button>Home</button></a>
+            <a href="/about"> <button>About us</button></a>
+            <a href="/call"> <button>Call for us</button></a>
+            <a href="/logout"> <button>logout</button></a>
+        </div>
+    </nav>
+
+    <!-- White Box with Table -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone No.</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Emergency Helpline</td>
+                    <td><a href="tel:101" class="phone-number">101</a></td>
+                </tr>
+                <tr>
+                    <td>Nepal Police</td>
+                    <td><a href="tel:100" class="phone-number">100</a></td>
+                </tr>
+                <tr>
+                    <td>Ambulance Support</td>
+                    <td><a href="tel:102" class="phone-number">102</a></td>
+                </tr>
+                <tr>
+                    <td>Red Cross Society</td>
+                    <td><a href="tel:025520258" class="phone-number">025-520258</a></td>
+                </tr>
+                <tr>
+                    <td>Child Helpline</td>
+                    <td><a href="tel:104" class="phone-number">104</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

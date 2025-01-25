@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flood Prediction</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        /* Reset default margin/padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body styles */
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://img.freepik.com/premium-photo/abstract-gray-background-with-white-lines-dots_1174990-197521.jpg');
+            background-size: cover;  /* Ensure the image covers the full screen */
+            background-position: center;  /* Position the image in the center */
+            background-repeat: no-repeat;  /* Prevent tiling of the image */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+            background-color: #897c7c;
+            flex-direction: column;
+        }
+
+        /* Navigation Bar Styles */
+        nav {
+            width: 100%;
+            background-color: #8f7d8c; /* Added background color */
+            align-content: center;
+            color: white;
+            position: fixed;  /* Fix the navbar to the top */
+            top: 0;  /* Ensure it's at the top */
+            left: 0;
+            z-index: 1000; /* Ensures it's on top of other content */
+        }
+
+        nav .navbar-container {
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            padding: 10px;
+        }
+
+        nav .navbar-container h1 {
+            margin-right: 750px;
+        }
+
+        nav .navbar-container button {
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-right: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        nav .navbar-container button:hover {
+            background-color: #007bff;
+        }
+
+        /* Container to hold both map and chatbox */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 1200px;
+            gap: 30px;
+            margin-top: 80px;  /* Adjusted margin-top to avoid overlap with navbar */
+        }
+
+        /* Left section: map */
+        .map-section {
+            width: 65%;
+            background-color: rgb(237, 237, 237, 0.5);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(38, 38, 38, 0.1);
+            align-self: left;
+            padding-top: 20px;  /* Ensures space for map header */
+        }
+
+        #map {
+            height: 400px;
+            border-radius: 8px 8px 0 0;
+            align-items: left;
+        }
+
+        /* Right section: chatbot */
+        .chatbox-container {
+            width: 30%;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 500px;
+            margin-top: 20px;  /* Small margin for chatbox */
+            order: 2;
+        }
+
+        .chatbox {
+            height: 80%;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: white;
+            opacity: 0.5;
+            border-radius: 5px;
+            border: 1px solid #847f7f;
+        }
+
+        .user-input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+        }
+
+        /* Flood prediction form styles */
+        .form-section {
+            margin-bottom: 20px;
+        }
+
+        input, button {
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Prediction result styles */
+        .results {
+            margin-top: 20px;
+        }
+
+        .city {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .city h3 {
+            color: #333;
+        }
+
+        .city p {
+            margin: 8px 0;
+        }
+
+        .city .high {
+            color: red;
+        }
+
+        .city .moderate {
+            color: orange;
+        }
+
+        .city .low {
+            color: green;
+        }
+
+        /* Footer with logout link */
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+            display:inline-block;
+            margin-top: 20px;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+
+        /* Form label styles */
+        label {
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: block;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="navbar-container">
+            <h1>Flood Prediction</h1>
+            <a href="/"> <button>Home</button></a>
+            <a href="/about"> <button>About us</button></a>
+            <a href="/call"> <button>Call for us</button></a>
+            <a href="/logout"> <button>logout</button></a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="map-section">
+            <h1>Flood Prediction Around a City</h1>
+            <form id="floodForm" class="form-section">
+                <label for="city">City Name:</label>
+                <input type="text" id="city" placeholder="Enter city name" required>
+                <button type="submit">Predict Flood Risk</button>
+            </form>
+
+            <div id="map"></div>
+            <div class="results" id="results"></div>
+        </div>
+
+        <!-- Chatbot Section -->
+        <div class="chatbox-container">
+            <h1>Chatbot</h1>
+            <div class="chatbox" id="chatbox"></div>
+            <input type="text" class="user-input" id="userInput" placeholder="Ask me anything..." onkeydown="if(event.key === 'Enter') sendMessage()">
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        const ELEVATION_API_URL = "https://api.open-elevation.com/api/v1/lookup";
+        const WEATHER_API_KEY = "c0ed95c327d9fdab98dfac91a3ce0082"; 
+        
+        const DEFAULT_RADIUS = 50; 
+
+        const map = L.map('map').setView([27.708317, 85.3205817], 13);  // Default to Kathmandu, Nepal
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        document.getElementById("floodForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const city = document.getElementById("city").value;
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "Loading...";
+
+            try {
+                const geocodeUrl = `https://nominatim.openstreetmap.org/search?q=${city}&format=json&limit=1`;
+                const geocodeResponse = await fetch(geocodeUrl);
+                const geocodeData = await geocodeResponse.json();
+
+                if (geocodeData.length === 0) {
+                    resultsDiv.innerHTML = `City '${city}' not found.`;
+                    return;
+                }
+
+                const { lat, lon } = geocodeData[0];
+
+                map.setView([lat, lon], 13);
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup(`<b>${city}</b><br>Latitude: ${lat}<br>Longitude: ${lon}`)
+                    .openPopup();
+
+                const elevationResponse = await fetch(`${ELEVATION_API_URL}?locations=${lat},${lon}`);
+                const elevationData = await elevationResponse.json();
+                const cityElevation = elevationData.results[0].elevation;
+
+                const weatherUrl = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${WEATHER_API_KEY}`;
+                const weatherResponse = await fetch(weatherUrl);
+                const weatherData = await weatherResponse.json();
+
+                const description = weatherData.weather[0].description;
+
+                let floodRisk = "Low";
+                let floodRiskPercentage = 0;
+
+                if (cityElevation < 50) {
+                    floodRisk = "High";
+                    floodRiskPercentage = 80;
+                } else if (cityElevation < 100) {
+                    floodRisk = "Moderate";
+                    floodRiskPercentage = 50;
+                } else {
+                    floodRisk = "Low";
+                    floodRiskPercentage = 20;
+                }
+
+                resultsDiv.innerHTML = ` 
+                    <h2>Flood Prediction Results</h2>
+                    <div class="city">
+                        <h3>${city}</h3>
+                        <p><strong>Elevation:</strong> ${cityElevation.toFixed(2)} meters</p>
+                        <p><strong>Weather:</strong> ${description}</p>
+                        <p><strong>Flood Risk:</strong> <span class="${floodRisk.toLowerCase()}">${floodRisk}</span></p>
+                        <p><strong>Flood Risk Percentage:</strong> ${floodRiskPercentage}%</p>
+                    </div>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `An error occurred: ${error.message}`;
+            }
+        });
+
+        const chatbox = document.getElementById("chatbox");
+
+        const botResponses = {
+    "hi": "Hello! How can I help you today?",
+    "hello": "Hey there! How can I assist you?",
+    "how are you": "I'm doing great, thanks for asking!",
+    "bye": "Goodbye! Take care!",
+    
+
+    "what is a flood": "A flood is an overflow of water onto land that is usually dry. Floods can be caused by heavy rainfall, melting snow, or the overflow of rivers and lakes.",
+    "what causes flooding": "Floods can be caused by various factors, including heavy rainfall, storm surges, rapid snowmelt, poor drainage systems, and man-made factors like dam failure.",
+    "how to stay safe during a flood": "Here are some flood safety tips:\n1. Move to higher ground.\n2. Avoid walking or driving through floodwaters.\n3. Listen to emergency services for evacuation orders.\n4. Keep important documents in waterproof containers.\n5. If trapped in a building, move to the highest floor.",
+    "signs of flooding": "Some signs of flooding include:\n1. Rapidly rising water in rivers or streams.\n2. Heavy and continuous rainfall.\n3. Sudden changes in the color of the water, indicating soil erosion.\n4. The sound of rushing water or debris.",
+    "how does flooding affect people": "Flooding can cause severe damage to homes, infrastructure, and crops. It can displace people, destroy livelihoods, and result in injuries or loss of life. It also increases the risk of waterborne diseases and can harm the environment.",
+    "what should I do after a flood": "After a flood, it's important to:\n1. Wait for official clearance before returning home.\n2. Avoid contact with floodwaters, which may be contaminated.\n3. Check for structural damage before entering buildings.\n4. Dispose of contaminated food and water.",
+    "how can we prevent flooding": "Flood prevention involves several strategies, including:\n1. Building proper drainage systems to channel rainwater.\n2. Constructing flood barriers and levees.\n3. Implementing sustainable land use practices to prevent soil erosion.\n4. Reforestation and wetland restoration to absorb excess water.\n5. Elevating buildings and infrastructure in flood-prone areas.",
+    "where can I get flood prediction data": "For real-time flood predictions and detailed flood risk analysis, you can visit our website! We provide up-to-date flood information, which can help you stay safe and make informed decisions during a flood event. Stay prepared with accurate data!",
+    "default": "Sorry, I didn't understand that. Can you ask something else?"
+};
+
+        function sendMessage() {
+            const userInput = document.getElementById("userInput").value.trim().toLowerCase();
+            if (!userInput) return;
+            
+            chatbox.innerHTML += `<div><strong>You:</strong> ${userInput}</div>`;
+            
+            const botResponse = botResponses[userInput] || botResponses["default"];
+            chatbox.innerHTML += `<div><strong>Bot:</strong> ${botResponse}</div>`;
+            
+            document.getElementById("userInput").value = "";
+        }
+    </script>
+</body>
+</html>
